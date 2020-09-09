@@ -1,4 +1,15 @@
+use draco::{Application, VNode};
 use wasm_bindgen::prelude::*;
+
+struct MyApp;
+
+impl Application for MyApp {
+    type Message = ();
+
+    fn view(&self) -> VNode<Self::Message> {
+        "Hello from Rust!".into()
+    }
+}
 
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
@@ -10,7 +21,12 @@ pub fn main() -> Result<(), JsValue> {
     let app = document
         .get_element_by_id("app")
         .ok_or("missing `app` in document")?;
-    app.set_inner_html("Hello from Rust!");
+
+    // draco が指定した DOM ノード自体を置き換えてしまうので、#app が消失しないようダミーの子ノードを直下に作っておく
+    let node = document.create_element("div")?;
+    app.append_child(&node)?;
+
+    let _mailbox = draco::start(MyApp, node.into());
 
     Ok(())
 }
