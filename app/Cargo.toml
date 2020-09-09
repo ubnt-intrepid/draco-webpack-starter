@@ -1,5 +1,5 @@
 [package]
-name = "wasm-bindgen-getting-started"
+name = "app"
 version = "0.0.0"
 publish = false
 edition = "2018"
